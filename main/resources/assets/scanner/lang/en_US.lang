@@ -1,0 +1,5 @@
+item.scanner.name=Scanner
+item.scanner.desc=Allow to find blocks
+config.damageAmount=Amount of damage taken by the scanner
+config.timeForDamage=Time in ms to damage the scanner
+message.scanner.broken=The scanner is broken

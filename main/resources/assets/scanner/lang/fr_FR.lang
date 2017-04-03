@@ -1,0 +1,5 @@
+item.scanner.name=Scanner
+item.scanner.desc=Permet de trouver des blocks
+config.damageAmount=Quantité de dégâts infligés au scanner
+config.timeForDamage=Temps en ms pour endommager le scanner
+message.scanner.broken=Le scanner est cassé
