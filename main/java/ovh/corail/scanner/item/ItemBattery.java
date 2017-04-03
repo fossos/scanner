@@ -11,6 +11,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import ovh.corail.scanner.core.Helper;
 import ovh.corail.scanner.core.Main;
+import ovh.corail.scanner.handler.AchievementHandler;
 
 public class ItemBattery extends Item {
 	private static final String name = "battery";
@@ -37,6 +38,6 @@ public class ItemBattery extends Item {
 	
 	@Override
 	public void onCreated(ItemStack stack, World worldIn, EntityPlayer playerIn) {
-		//TODO playerIn.addStat(Main.achievementXYZ, 1);
+		playerIn.addStat(AchievementHandler.getAchievement("buildBattery"), 1);
 	}
 }

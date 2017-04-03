@@ -43,6 +43,8 @@ public class GuiOverlayScanner extends Gui {
 	protected static int detectFound = 0;
 	protected static int lastProgress = 0;
 	protected static ItemStack target = ItemStack.EMPTY;
+	protected static boolean discharged;
+	protected static boolean messageDischarged = false;
 
 	public GuiOverlayScanner(Minecraft mc) {
 		this.mc = mc;
@@ -52,7 +54,14 @@ public class GuiOverlayScanner extends Gui {
         this.height = scaled.getScaledHeight();
         this.guiLeft = width - guiWidth + 10;
         this.guiTop = height - guiHeight + 60;
-        this.target = ItemScanner.getTarget(mc.player.getHeldItemMainhand());
+        ItemStack holdItem = mc.player.getHeldItemMainhand();
+        this.target = ItemScanner.getTarget(holdItem);
+        this.discharged = holdItem.getItemDamage() + ConfigurationHandler.damageAmount >= holdItem.getMaxDamage();
+        if (discharged) {
+        	lastProgress = 0;
+        } else {
+        	messageDischarged = false;
+        }
         temporize();
         drawScreen();
 	}
@@ -90,7 +99,7 @@ public class GuiOverlayScanner extends Gui {
 			Set<BlockPos> blockPosList = new HashSet<BlockPos>();
 			/** list a line of blocks facing the player */
 			detectFound = 0;
-			if (!target.isEmpty()) {
+			if (!target.isEmpty() && !discharged) {
 				for (int depth = 1 ; depth <= depthMax ; depth++) {
 					currentPos = currentPos.add(lookVec3i.getX(), lookVec3i.getY(), lookVec3i.getZ());
 					BlockPos start, end;
@@ -111,29 +120,28 @@ public class GuiOverlayScanner extends Gui {
 				for (BlockPos pos : blockPosList) {
 					IBlockState state = mc.world.getBlockState(pos);
 					// TODO could check oredict similar ore
-					if (Helper.areItemEqual(new ItemStack(state.getBlock(),1,state.getBlock().getMetaFromState(state)), target)) {
+					if (Helper.areItemEqual(new ItemStack(state.getBlock(), 1, state.getBlock().getMetaFromState(state)), target)) {
 						detectFound++;
 					}
-					//System.out.println("Found "+state.getBlock().getRegistryName().toString()+" at "+pos.getX()+"/"+pos.getY()+"/"+pos.getZ());
 				}
 			}
 			// TODO Achievment for some kinds/count of blocks found */
 		}
-		//System.out.println(lastProgress + "/" +detectFound);
 		/** allow to draw slowly the jauge progress */
 		if (tick%2==0 && lastProgress != detectFound) {
 			lastProgress = (lastProgress < detectFound ? lastProgress+1 : lastProgress-1);
 		}
 		/** damage the scanner */
-		// TODO could make a battery to recharge the scanner and not destroy it */
-		if (ConfigurationHandler.damageAmount > 0 && tick%(ConfigurationHandler.timeForDamage/100)==0) {
+		if (!discharged && ConfigurationHandler.damageAmount > 0 && tick%(ConfigurationHandler.timeForDamage/100)==0) {
 			ItemStack scanner = mc.player.getHeldItemMainhand();
 			PacketHandler.INSTANCE.sendToServer(new DamageHoldItemServerMessage(ConfigurationHandler.damageAmount));
 			scanner = Helper.damageItem(scanner, ConfigurationHandler.damageAmount);
 			mc.player.setHeldItem(EnumHand.MAIN_HAND, scanner);
-			if (scanner.isEmpty()) {
-				Helper.sendMessage("message.scanner.broken", mc.player, true);
-			}
+
+		}
+		if (discharged && !messageDischarged) {
+			Helper.sendMessage("message.scanner.discharged", mc.player, true);
+			messageDischarged = true;
 		}
 		// TODO sounds to this player depending on detectFound
 	}
@@ -155,12 +163,14 @@ public class GuiOverlayScanner extends Gui {
 		}
 		GlStateManager.scale(2.5f, 2.5f, 2.5f);
 		/** draw text on gui */
-		if (!target.isEmpty()) {
-			drawString(fontRenderer, "Scanning for", x*2, (y+15)*2, Color.YELLOW.getRGB());
+		if (discharged) {
+			drawString(fontRenderer, Helper.getTranslation("statut.scanner.discharged"), x*2, (y+15)*2, Color.RED.getRGB());
+		} else if (!target.isEmpty()) {
+			drawString(fontRenderer, Helper.getTranslation("statut.scanner.scanning"), x*2, (y+15)*2, Color.YELLOW.getRGB());
 			drawString(fontRenderer, target.getDisplayName(), x*2, (y+22)*2, Color.YELLOW.getRGB());
 		} else {
-			drawString(fontRenderer, "Right-click a block", x*2, (y+15)*2, Color.CYAN.getRGB());
-			drawString(fontRenderer, "to start scanning", x*2, (y+22)*2, Color.CYAN.getRGB());
+			drawString(fontRenderer, Helper.getTranslation("statut.scanner.waiting1"), x*2, (y+15)*2, Color.CYAN.getRGB());
+			drawString(fontRenderer, Helper.getTranslation("statut.scanner.waiting2"), x*2, (y+22)*2, Color.CYAN.getRGB());
 		}
 		GlStateManager.scale(2f, 2f, 2f);
 	}

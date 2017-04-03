@@ -15,6 +15,7 @@ import net.minecraftforge.oredict.RecipeSorter;
 import net.minecraftforge.oredict.RecipeSorter.Category;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
+import ovh.corail.scanner.handler.AchievementHandler;
 import ovh.corail.scanner.handler.ConfigurationHandler;
 import ovh.corail.scanner.handler.PacketHandler;
 
@@ -30,7 +31,7 @@ public class CommonProxy {
 		/** new recipes */
 		/** battery */
 		GameRegistry.addRecipe(new ShapedOreRecipe(Main.battery, new Object[] { "1", "0", "1", 
-				Character.valueOf('0'),	"nuggetIron", 
+				Character.valueOf('0'),	"nuggetGold", 
 				Character.valueOf('1'),	Items.REDSTONE, 
 		}));
 		/** scanner */
@@ -54,10 +55,10 @@ public class CommonProxy {
 						break;
 					}
 				}
-				if (scanner.isEmpty())
-					return ItemStack.EMPTY;
+				if (scanner.isEmpty()) { return ItemStack.EMPTY; }
 				ItemStack res = scanner.copy();
 				res.setItemDamage(0);
+				// TODO add achievement for recharge
 				return res;
 			}
 		}
@@ -70,7 +71,8 @@ public class CommonProxy {
 	}
 	
 	public void init(FMLInitializationEvent event) {
-		
+		/** achievements */
+		AchievementHandler.registerAchievements();
 	}
 	
 	public void postInit(FMLPostInitializationEvent event) {

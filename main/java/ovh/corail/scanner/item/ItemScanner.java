@@ -25,6 +25,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import ovh.corail.scanner.core.Helper;
 import ovh.corail.scanner.core.Main;
 import ovh.corail.scanner.gui.GuiOverlayScanner;
+import ovh.corail.scanner.handler.AchievementHandler;
 
 public class ItemScanner extends Item {
 	private static final String name = "scanner";
@@ -45,12 +46,10 @@ public class ItemScanner extends Item {
 	
 	@Override
 	public EnumActionResult onItemUse(EntityPlayer player, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
-		/** TODO could be right click holding to scan and another key to select target */
 		IBlockState target = worldIn.getBlockState(pos);
 		// TODO could deny some blocks
 		setTarget(player.getHeldItemMainhand(), target);
-		// TODO don't destroy blocks 
-		return super.onItemUse(player, worldIn, pos, hand, facing, hitX, hitY, hitZ);
+		return EnumActionResult.FAIL;//super.onItemUse(player, worldIn, pos, hand, facing, hitX, hitY, hitZ);
 	}
 	
 	public static ItemStack getTarget(ItemStack stack) {
@@ -97,7 +96,7 @@ public class ItemScanner extends Item {
 	
 	@Override
 	public void onCreated(ItemStack stack, World worldIn, EntityPlayer playerIn) {
-		//TODO playerIn.addStat(Main.achievementXYZ, 1);
+		playerIn.addStat(AchievementHandler.getAchievement("buildScanner"), 1);
 	}
 	
 	@SubscribeEvent

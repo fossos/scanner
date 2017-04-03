@@ -10,6 +10,7 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
+import ovh.corail.scanner.handler.AchievementHandler;
 import ovh.corail.scanner.handler.CommandHandler;
 import ovh.corail.scanner.handler.EventHandler;
 import ovh.corail.scanner.item.ItemBattery;
@@ -39,8 +40,10 @@ public class Main {
 	};
 	public static ItemScanner scanner = new ItemScanner();
 	public static ItemBattery battery = new ItemBattery();
+
 	@Mod.EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
+		AchievementHandler.initAchievements();
 		MinecraftForge.EVENT_BUS.register(new EventHandler());
 		proxy.preInit(event);
 	}
