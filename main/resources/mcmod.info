@@ -2,7 +2,7 @@
 {
   "modid": "scanner",
   "name": "Corail Scanner",
-  "description": "Detect blocks around you.",
+  "description": "Add a scanner able to find any kind of blocks, with a playfulness to find them.",
   "version": "${version}",
   "mcversion": "${mcversion}",
   "url": "http://minecraft.curseforge.com/projects/corail-scanner",

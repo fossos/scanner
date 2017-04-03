@@ -93,8 +93,8 @@ public class GuiOverlayScanner extends Gui {
 			EnumFacing facing = EnumFacing.getFacingFromVector((float)lookVec3d.xCoord, (float)lookVec3d.yCoord, (float)lookVec3d.zCoord);
 			BlockPos nearestPos = playerPos.add(lookVec3i.getX(), lookVec3i.getY(), lookVec3i.getZ());
 
-			int radius = 2;
-			int depthMax = 5;
+			int radius = 3;
+			int depthMax = 10;
 			BlockPos currentPos = playerPos;
 			Set<BlockPos> blockPosList = new HashSet<BlockPos>();
 			/** list a line of blocks facing the player */
@@ -132,7 +132,7 @@ public class GuiOverlayScanner extends Gui {
 			lastProgress = (lastProgress < detectFound ? lastProgress+1 : lastProgress-1);
 		}
 		/** damage the scanner */
-		if (!discharged && ConfigurationHandler.damageAmount > 0 && tick%(ConfigurationHandler.timeForDamage/100)==0) {
+		if (!discharged && !target.isEmpty() && ConfigurationHandler.damageAmount > 0 && tick%(ConfigurationHandler.timeForDamage/100)==0) {
 			ItemStack scanner = mc.player.getHeldItemMainhand();
 			PacketHandler.INSTANCE.sendToServer(new DamageHoldItemServerMessage(ConfigurationHandler.damageAmount));
 			scanner = Helper.damageItem(scanner, ConfigurationHandler.damageAmount);

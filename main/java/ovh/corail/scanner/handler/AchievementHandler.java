@@ -30,13 +30,6 @@ public class AchievementHandler {
 	}
 	
 	public static void registerAchievements() {
-		Achievement[] pageList = new Achievement[achievementCount];
-		int i = 0;
-		for (Entry<String, Achievement> entry : achievements.entrySet()) {
-		    Achievement achievement = entry.getValue();
-		    achievement.registerStat();
-		    pageList[i++] = achievement;
-		}
-		AchievementPage.registerAchievementPage(new AchievementPage(Main.MOD_ID, pageList));
+		AchievementPage.registerAchievementPage(new AchievementPage(Main.MOD_ID, achievements.values().toArray(new Achievement[achievements.values().size()])));
 	}
 }
