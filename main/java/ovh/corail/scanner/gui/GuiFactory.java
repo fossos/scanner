@@ -28,4 +28,14 @@ public class GuiFactory implements IModGuiFactory {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	@Override
+	public boolean hasConfigGui() {
+		return true;
+	}
+
+	@Override
+	public GuiScreen createConfigGui(GuiScreen parentScreen) {
+		return new GuiConfigScanner(parentScreen);
+	}
 }
