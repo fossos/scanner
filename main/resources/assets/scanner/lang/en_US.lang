@@ -1,5 +1,7 @@
 item.scanner.name=Scanner
 item.scanner.desc=Allow to find blocks
+item.battery.name=Battery
+item.battery.desc=Allow to recharge the scanner
 config.damageAmount=Amount of damage taken by the scanner
 config.timeForDamage=Time in ms to damage the scanner
 message.scanner.broken=The scanner is broken

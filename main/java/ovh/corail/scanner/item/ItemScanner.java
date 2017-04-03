@@ -5,6 +5,7 @@ import java.util.List;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -37,10 +38,18 @@ public class ItemScanner extends Item {
 		setMaxDamage(5000);
 	}
 	
+	@Override
+	public void onPlayerStoppedUsing(ItemStack stack, World worldIn, EntityLivingBase entityLiving, int timeLeft) {
+		/** TODO could be right click holding to scan and another key to select target */
+	}
+	
+	@Override
 	public EnumActionResult onItemUse(EntityPlayer player, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
+		/** TODO could be right click holding to scan and another key to select target */
 		IBlockState target = worldIn.getBlockState(pos);
 		// TODO could deny some blocks
 		setTarget(player.getHeldItemMainhand(), target);
+		// TODO don't destroy blocks 
 		return super.onItemUse(player, worldIn, pos, hand, facing, hitX, hitY, hitZ);
 	}
 	

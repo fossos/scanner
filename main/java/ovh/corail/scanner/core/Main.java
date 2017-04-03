@@ -12,9 +12,10 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import ovh.corail.scanner.handler.CommandHandler;
 import ovh.corail.scanner.handler.EventHandler;
+import ovh.corail.scanner.item.ItemBattery;
 import ovh.corail.scanner.item.ItemScanner;
 
-@Mod(modid = Main.MOD_ID, name = Main.MOD_NAME, version = Main.MOD_VER, guiFactory = "ovh.corail.scanner.gui.GuiFactory")
+@Mod(modid = Main.MOD_ID, name = Main.MOD_NAME, version = Main.MOD_VER, guiFactory = "ovh.corail." + Main.MOD_ID + ".gui.GuiFactory")
 public class Main {
 	public static final String MOD_ID = "scanner";
 	public static final String MOD_NAME = "Corail Scanner";
@@ -37,7 +38,7 @@ public class Main {
 		}
 	};
 	public static ItemScanner scanner = new ItemScanner();
-	
+	public static ItemBattery battery = new ItemBattery();
 	@Mod.EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
 		MinecraftForge.EVENT_BUS.register(new EventHandler());

@@ -14,6 +14,15 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class Helper {
 	
+	public static ItemStack damageItem(ItemStack stack, int amount) {
+		boolean broke = stack.getItemDamage() + amount > stack.getMaxDamage();
+		if (!broke) {
+			stack.setItemDamage(stack.getItemDamage() + amount);
+			return stack;
+		}
+		return ItemStack.EMPTY;
+	}
+	
 	public static String ItemStackToString(ItemStack stack, boolean withStackSize) {
 		return stack.getItem().getRegistryName().toString() + (withStackSize ? ":"+stack.getCount() : "") + ":" + stack.getMetadata();
 	}
@@ -76,6 +85,7 @@ public class Helper {
 		/** blocks */
 		/** items */
 		render(Main.scanner);
+		render(Main.battery);
 	}
 
 	private static void render(Block block) {
@@ -99,6 +109,7 @@ public class Helper {
 		/** blocks */
 		/** items */
 		register(Main.scanner);
+		register(Main.battery);
 	}
 	
 	private static void register(Block block) {

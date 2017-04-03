@@ -18,7 +18,7 @@ public class CommandHandler implements ICommand {
 	private final List<String> commands = Lists.newArrayList();
 			
 	public CommandHandler() {
-		aliases.add("test");
+		aliases.add("scanner");
 		aliases.add("corail");
 		//commands.add("openGui");
 	}

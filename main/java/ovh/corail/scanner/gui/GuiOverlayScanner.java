@@ -23,7 +23,9 @@ import net.minecraft.util.math.Vec3i;
 import ovh.corail.scanner.core.Helper;
 import ovh.corail.scanner.core.Main;
 import ovh.corail.scanner.handler.ConfigurationHandler;
+import ovh.corail.scanner.handler.PacketHandler;
 import ovh.corail.scanner.item.ItemScanner;
+import ovh.corail.scanner.packet.DamageHoldItemServerMessage;
 
 public class GuiOverlayScanner extends Gui {
 	protected static Minecraft mc;
@@ -123,12 +125,13 @@ public class GuiOverlayScanner extends Gui {
 			lastProgress = (lastProgress < detectFound ? lastProgress+1 : lastProgress-1);
 		}
 		/** damage the scanner */
-		// TODO could make a way to recharge the scanner and not destroy it */
+		// TODO could make a battery to recharge the scanner and not destroy it */
 		if (ConfigurationHandler.damageAmount > 0 && tick%(ConfigurationHandler.timeForDamage/100)==0) {
 			ItemStack scanner = mc.player.getHeldItemMainhand();
-			scanner.setItemDamage(scanner.getItemDamage()+ConfigurationHandler.damageAmount);
-			if (scanner.getItemDamage() > scanner.getMaxDamage()) {
-				mc.player.setHeldItem(EnumHand.MAIN_HAND, ItemStack.EMPTY);
+			PacketHandler.INSTANCE.sendToServer(new DamageHoldItemServerMessage(ConfigurationHandler.damageAmount));
+			scanner = Helper.damageItem(scanner, ConfigurationHandler.damageAmount);
+			mc.player.setHeldItem(EnumHand.MAIN_HAND, scanner);
+			if (scanner.isEmpty()) {
 				Helper.sendMessage("message.scanner.broken", mc.player, true);
 			}
 		}

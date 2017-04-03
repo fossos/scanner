@@ -1,10 +1,7 @@
 package ovh.corail.scanner.handler;
 
-import java.io.File;
-
 import net.minecraftforge.common.config.Configuration;
 import ovh.corail.scanner.core.Helper;
-import ovh.corail.scanner.core.Main;
 
 public class ConfigurationHandler {
 	public static Configuration config;
