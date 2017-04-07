@@ -21,7 +21,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3i;
 import ovh.corail.scanner.core.Helper;
-import ovh.corail.scanner.core.Main;
+import ovh.corail.scanner.core.ModProps;
 import ovh.corail.scanner.handler.ConfigurationHandler;
 import ovh.corail.scanner.handler.PacketHandler;
 import ovh.corail.scanner.item.ItemScanner;
@@ -34,8 +34,8 @@ public class GuiOverlayScanner extends Gui {
 	protected static int width, height, guiLeft, guiTop;
 	protected static int guiWidth = 128;
 	protected static int guiHeight = 128;
-	protected static ResourceLocation textureJauge = new ResourceLocation(Main.MOD_ID + ":textures/gui/jauge.png"); 
-	protected static ResourceLocation textureScanner = new ResourceLocation(Main.MOD_ID + ":textures/items/scanner.png"); 
+	protected static ResourceLocation textureJauge = new ResourceLocation(ModProps.MOD_ID + ":textures/gui/jauge.png"); 
+	protected static ResourceLocation textureScanner = new ResourceLocation(ModProps.MOD_ID + ":textures/items/scanner.png"); 
 	private static long lastUpdate = -1;
 	private static long tick = Long.MIN_VALUE;
 	private static long lastTick = Long.MIN_VALUE;
@@ -93,8 +93,8 @@ public class GuiOverlayScanner extends Gui {
 			EnumFacing facing = EnumFacing.getFacingFromVector((float)lookVec3d.xCoord, (float)lookVec3d.yCoord, (float)lookVec3d.zCoord);
 			BlockPos nearestPos = playerPos.add(lookVec3i.getX(), lookVec3i.getY(), lookVec3i.getZ());
 
-			int radius = 3;
-			int depthMax = 10;
+			int radius = ConfigurationHandler.scanRadius;
+			int depthMax = ConfigurationHandler.scanRange;
 			BlockPos currentPos = playerPos;
 			Set<BlockPos> blockPosList = new HashSet<BlockPos>();
 			/** list a line of blocks facing the player */
@@ -132,7 +132,7 @@ public class GuiOverlayScanner extends Gui {
 			lastProgress = (lastProgress < detectFound ? lastProgress+1 : lastProgress-1);
 		}
 		/** damage the scanner */
-		if (!discharged && !target.isEmpty() && ConfigurationHandler.damageAmount > 0 && tick%(ConfigurationHandler.timeForDamage/100)==0) {
+		if (!discharged && !target.isEmpty() && ConfigurationHandler.damageAmount > 0 && tick%ConfigurationHandler.tickForDamage==0) {
 			ItemStack scanner = mc.player.getHeldItemMainhand();
 			PacketHandler.INSTANCE.sendToServer(new DamageHoldItemServerMessage(ConfigurationHandler.damageAmount));
 			scanner = Helper.damageItem(scanner, ConfigurationHandler.damageAmount);

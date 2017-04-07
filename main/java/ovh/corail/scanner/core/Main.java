@@ -1,5 +1,9 @@
 package ovh.corail.scanner.core;
 
+import static ovh.corail.scanner.core.ModProps.MOD_ID;
+import static ovh.corail.scanner.core.ModProps.MOD_NAME;
+import static ovh.corail.scanner.core.ModProps.MOD_VER;
+
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
@@ -16,18 +20,15 @@ import ovh.corail.scanner.handler.EventHandler;
 import ovh.corail.scanner.item.ItemBattery;
 import ovh.corail.scanner.item.ItemScanner;
 
-@Mod(modid = Main.MOD_ID, name = Main.MOD_NAME, version = Main.MOD_VER, guiFactory = "ovh.corail." + Main.MOD_ID + ".gui.GuiFactory")
+@Mod(modid = MOD_ID, name = MOD_NAME, version = MOD_VER, guiFactory = "ovh.corail." + MOD_ID + ".gui.GuiFactory")
 public class Main {
-	public static final String MOD_ID = "scanner";
-	public static final String MOD_NAME = "Corail Scanner";
-	public static final String MOD_VER = "1.0.0";
 	
-	@Instance(Main.MOD_ID)
+	@Instance(MOD_ID)
 	public static Main instance;
 	
 	@SidedProxy(clientSide = "ovh.corail."+ MOD_ID +".core.ClientProxy", serverSide = "ovh.corail." + MOD_ID + ".core.CommonProxy")
 	public static CommonProxy proxy;
-	public static CreativeTabs tabScanner = new CreativeTabs(Main.MOD_ID) {
+	public static CreativeTabs tabScanner = new CreativeTabs(MOD_ID) {
 		@Override
 		public ItemStack getTabIconItem() {
 			return new ItemStack(Main.scanner, 1);
@@ -35,7 +36,7 @@ public class Main {
 
 		@Override
 		public String getTranslatedTabLabel() {
-			return Main.MOD_NAME;
+			return MOD_NAME;
 		}
 	};
 	public static ItemScanner scanner = new ItemScanner();

@@ -2,6 +2,7 @@ package ovh.corail.scanner.item;
 
 import java.util.List;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
@@ -24,6 +25,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import ovh.corail.scanner.core.Helper;
 import ovh.corail.scanner.core.Main;
+import ovh.corail.scanner.core.ScannerManager;
 import ovh.corail.scanner.gui.GuiOverlayScanner;
 import ovh.corail.scanner.handler.AchievementHandler;
 
@@ -45,10 +47,18 @@ public class ItemScanner extends Item {
 	}
 	
 	@Override
-	public EnumActionResult onItemUse(EntityPlayer player, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
-		IBlockState target = worldIn.getBlockState(pos);
+	public EnumActionResult onItemUse(EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
+		IBlockState targetState = world.getBlockState(pos);
+		Block targetBlock = targetState.getBlock();
 		// TODO could deny some blocks
-		setTarget(player.getHeldItemMainhand(), target);
+		if (ScannerManager.getInstance().canSelectBlock(targetBlock.getRegistryName().toString()+":"+targetBlock.getMetaFromState(targetState))) {
+			setTarget(player.getHeldItemMainhand(), targetState);
+		} else {
+			if (world.isRemote) {
+				Helper.sendMessage("message.scanner.cantSelect", player, true);
+			}
+			setTarget(player.getHeldItemMainhand(), null);
+		}
 		return EnumActionResult.FAIL;//super.onItemUse(player, worldIn, pos, hand, facing, hitX, hitY, hitZ);
 	}
 	
@@ -72,10 +82,17 @@ public class ItemScanner extends Item {
 	}
 	
 	/** write the compound of the itemStack */
-	private static boolean setTarget(ItemStack stack, IBlockState target) {
-		if (checkCompound(stack) && target != null) {
+	private static boolean setTarget(ItemStack stack, IBlockState targetState) {
+		String targetString = null;
+		if (targetState == null) {
+			targetString = ItemStack.EMPTY.getUnlocalizedName() + ":" + ItemStack.EMPTY.getMetadata();
+		} else {
+			Block targetBlock = targetState.getBlock();
+			targetString = targetBlock.getRegistryName().toString() + ":" + targetBlock.getMetaFromState(targetState);
+		}
+		if (checkCompound(stack)) {
 			NBTTagCompound compound = stack.getTagCompound();
-			compound.setString("target", target.getBlock().getRegistryName().toString()+":"+target.getBlock().getMetaFromState(target));
+			compound.setString("target", targetString);
 			return true;
 		} else {
 			return false;

@@ -2,12 +2,12 @@ package ovh.corail.scanner.handler;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import net.minecraft.item.Item;
 import net.minecraft.stats.Achievement;
 import net.minecraftforge.common.AchievementPage;
 import ovh.corail.scanner.core.Main;
+import ovh.corail.scanner.core.ModProps;
 
 public class AchievementHandler {
 	private static Map<String, Achievement> achievements = new HashMap<String, Achievement>();
@@ -30,6 +30,6 @@ public class AchievementHandler {
 	}
 	
 	public static void registerAchievements() {
-		AchievementPage.registerAchievementPage(new AchievementPage(Main.MOD_ID, achievements.values().toArray(new Achievement[achievements.values().size()])));
+		AchievementPage.registerAchievementPage(new AchievementPage(ModProps.MOD_ID, achievements.values().toArray(new Achievement[achievements.values().size()])));
 	}
 }

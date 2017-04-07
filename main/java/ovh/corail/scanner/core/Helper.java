@@ -1,5 +1,16 @@
 package ovh.corail.scanner.core;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.lang.reflect.Type;
+import java.util.Set;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
@@ -21,6 +32,27 @@ public class Helper {
 			return stack;
 		}
 		return ItemStack.EMPTY;
+	}
+	
+	public static boolean saveAsJson(File file, Set<?> list) {
+		if (file.exists()) { file.delete(); }
+		try {
+			if (file.createNewFile()) {
+				FileWriter fw = new FileWriter(file);
+				fw.write(new GsonBuilder().setPrettyPrinting().create().toJson(list));
+				fw.close();
+				return true;
+			}
+		} catch (IOException e) { e.printStackTrace(); }
+		return false;
+	}
+	
+	public static Set<?> loadAsJson(File file, Type token) {
+		Set<?> list = null;
+		try {
+			list = new Gson().fromJson(new BufferedReader(new FileReader(file)), token);
+		} catch (Exception e) { e.printStackTrace(); }
+		return list;
 	}
 	
 	public static String ItemStackToString(ItemStack stack, boolean withStackSize) {
