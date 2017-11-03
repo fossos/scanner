@@ -1,0 +1,23 @@
+{
+  "type": "forge:ore_shaped",
+  "pattern": [
+    "2 2",
+	"010",
+	"000"
+  ],
+  "key": {
+    "0": {
+	  "type": "forge:ore_dict",
+	  "ore": "ingotIron"
+    },
+    "1": {
+      "item": "scanner:battery"
+    },
+    "2": {
+      "item": "minecraft:redstone_torch"
+    }
+  },
+  "result": {
+    "item": "scanner:scanner"
+  }
+}

@@ -6,6 +6,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -27,7 +28,6 @@ import ovh.corail.scanner.core.Helper;
 import ovh.corail.scanner.core.Main;
 import ovh.corail.scanner.core.ScannerManager;
 import ovh.corail.scanner.gui.GuiOverlayScanner;
-import ovh.corail.scanner.handler.AchievementHandler;
 
 public class ItemScanner extends Item {
 	private static final String name = "scanner";
@@ -107,13 +107,13 @@ public class ItemScanner extends Item {
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean advanced) {
+	public void addInformation(ItemStack stack, World world, List<String> list, ITooltipFlag flag) {
 		list.add(TextFormatting.WHITE + Helper.getTranslation("item." + name + ".desc"));
 	}
 	
 	@Override
-	public void onCreated(ItemStack stack, World worldIn, EntityPlayer playerIn) {
-		playerIn.addStat(AchievementHandler.getAchievement("buildScanner"), 1);
+	public void onCreated(ItemStack stack, World world, EntityPlayer player) {
+		Helper.grantAdvancement(player, "tutorial/create_scanner");
 	}
 	
 	@SubscribeEvent

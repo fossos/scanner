@@ -1,0 +1,24 @@
+{
+    "display": {
+        "icon": {
+            "item": "scanner:scanner"
+        },
+        "title": {
+            "translate": "advancement.create_scanner.title"
+        },
+        "description": {
+            "translate": "advancement.create_scanner.desc"
+        },
+		"frame": "task",
+		"hidden": false
+    },
+	"parent": "scanner:tutorial/root",
+    "criteria": {
+      "coded_trigger": {
+        "trigger": "minecraft:impossible"
+      }
+    },
+	"requirements": [
+      [  "coded_trigger" ]
+    ]
+}

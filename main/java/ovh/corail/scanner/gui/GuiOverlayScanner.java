@@ -89,8 +89,8 @@ public class GuiOverlayScanner extends Gui {
 			BlockPos playerPos = player.getPosition().up();
 			Vec3d posVec3d = player.getPositionVector().addVector(0d, 1d, 0d);
 			Vec3d lookVec3d = player.getLookVec();
-			Vec3i lookVec3i = new Vec3i((int) Math.round(lookVec3d.xCoord), (int) Math.round(lookVec3d.yCoord), (int) Math.round(lookVec3d.zCoord));
-			EnumFacing facing = EnumFacing.getFacingFromVector((float)lookVec3d.xCoord, (float)lookVec3d.yCoord, (float)lookVec3d.zCoord);
+			Vec3i lookVec3i = new Vec3i((int) Math.round(lookVec3d.x), (int) Math.round(lookVec3d.y), (int) Math.round(lookVec3d.z));
+			EnumFacing facing = EnumFacing.getFacingFromVector((float)lookVec3d.x, (float)lookVec3d.y, (float)lookVec3d.z);
 			BlockPos nearestPos = playerPos.add(lookVec3i.getX(), lookVec3i.getY(), lookVec3i.getZ());
 
 			int radius = ConfigurationHandler.scanRadius;

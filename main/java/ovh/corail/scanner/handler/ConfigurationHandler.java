@@ -17,7 +17,7 @@ public class ConfigurationHandler {
 	
 	public static void refreshConfig() {
 		damageAmount=config.getInt("damageAmount", config.CATEGORY_GENERAL, 5, 0, 5000, Helper.getTranslation("config.damageAmount"));
-		tickForDamage=config.getInt("timeForDamage", config.CATEGORY_GENERAL, 1000, 100, 60000, Helper.getTranslation("config.tickForDamage"));
+		tickForDamage=config.getInt("tickForDamage", config.CATEGORY_GENERAL, 1000, 100, 60000, Helper.getTranslation("config.tickForDamage"));
 		scanRange=config.getInt("scanRange", config.CATEGORY_GENERAL, 10, 1, 1000, Helper.getTranslation("config.scanRange"));
 		scanRadius=config.getInt("scanRadius", config.CATEGORY_GENERAL, 3, 1, 9, Helper.getTranslation("config.scanRadius"));
 		if (config.hasChanged()) {

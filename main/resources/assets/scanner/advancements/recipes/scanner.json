@@ -1,0 +1,43 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "scanner:scanner",
+	  "scanner:recharge_scanner"
+    ]
+  },
+  "criteria": {
+    "has_battery": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "scanner:battery",
+			"data": 0
+          }
+        ]
+      }
+    },
+    "has_ingot_iron": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+	        "type": "forge:ore_dict",
+	        "ore": "ingotIron"
+          }
+        ]
+      }
+    },
+    "has_redstone_torch": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "minecraft:redstone_torch"
+          }
+        ]
+      }
+    }
+  }
+}

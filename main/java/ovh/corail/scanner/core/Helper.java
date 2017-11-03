@@ -11,17 +11,23 @@ import java.util.Set;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import net.minecraft.advancements.Advancement;
+import net.minecraft.advancements.AdvancementManager;
+import net.minecraft.advancements.AdvancementProgress;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
+import net.minecraft.server.management.PlayerList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.translation.I18n;
-import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
 
 public class Helper {
 	
@@ -32,6 +38,27 @@ public class Helper {
 			return stack;
 		}
 		return ItemStack.EMPTY;
+	}
+	
+	public static boolean grantAdvancement(EntityPlayer player, String name) {
+		return grantAdvancement(player, ModProps.MOD_ID, name);
+	}
+	
+	public static boolean grantAdvancement(EntityPlayer player, String domain, String name) {
+		if (player == null) { return false; }
+		if (player.world.isRemote) { return true; }
+		PlayerList playerList = FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList();
+		EntityPlayerMP player_mp = playerList.getPlayerByUUID(player.getUniqueID());
+		AdvancementManager am = player_mp.getServerWorld().getAdvancementManager();
+		Advancement advancement = am.getAdvancement(new ResourceLocation(domain, name));
+		if (advancement == null) { return false; }
+		AdvancementProgress advancementprogress = player_mp.getAdvancements().getProgress(advancement);
+		if (!advancementprogress.isDone()) {
+			for (String criteria : advancementprogress.getRemaningCriteria()) {
+				player_mp.getAdvancements().grantCriterion(advancement, criteria);
+			}
+		}
+		return true;
 	}
 	
 	public static boolean saveAsJson(File file, Set<?> list) {
@@ -145,11 +172,11 @@ public class Helper {
 	}
 	
 	private static void register(Block block) {
-		GameRegistry.register(block);
-		GameRegistry.register(new ItemBlock(block).setRegistryName(block.getRegistryName()));
+		ForgeRegistries.BLOCKS.register(block);
+		ForgeRegistries.ITEMS.register(new ItemBlock(block).setRegistryName(block.getRegistryName()));
 	}
 
 	private static void register(Item item) {
-		GameRegistry.register(item);
+		ForgeRegistries.ITEMS.register(item);
 	}
 }

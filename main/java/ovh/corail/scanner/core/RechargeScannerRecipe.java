@@ -6,7 +6,7 @@ import net.minecraftforge.oredict.ShapelessOreRecipe;
 
 public class RechargeScannerRecipe extends ShapelessOreRecipe {
 	public RechargeScannerRecipe(ItemStack res, Object... recipe) {
-		super(res, recipe);
+		super(null, res, recipe);
 	}
 
 	@Override
