@@ -24,6 +24,8 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import ovh.corail.scanner.core.Helper;
 import ovh.corail.scanner.core.Main;
 import ovh.corail.scanner.core.NBTStackHelper;
@@ -62,6 +64,7 @@ public class ItemScanner extends Item {
 	}
 	
 	@Override
+	@SideOnly(Side.CLIENT)
 	public boolean hasEffect(ItemStack stack) {
 		EntityPlayerSP player = Minecraft.getMinecraft().player;
 		return isSearching(player, stack);
