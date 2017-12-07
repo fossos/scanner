@@ -8,6 +8,7 @@ config.batteryEnergy=Max energy for a battery
 config.scanRange=Range of the scanner in blocks
 config.highlightBlock=Highlight founded blocks
 config.activateScannerSound=Activate the scanner sound
+config.favoriteSound=Favorite Sound
 message.scanner.discharged=The scanner is discharged
 message.scanner.cantSelect=This block can't be selected
 message.scanner.select=You selected %s

@@ -11,7 +11,6 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
-import net.minecraft.init.SoundEvents;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -20,10 +19,12 @@ import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.NonNullList;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import ovh.corail.scanner.core.Helper;
@@ -111,7 +112,7 @@ public class ItemScanner extends Item {
 			if (currentGui == null) { return; }
 			if (ConfigurationHandler.enableScannerSound && timeLeft % 3 == 0) {	
 				float pitch = (float)currentGui.detectFound/12f; 
-				player.world.playSound(player, player.getPosition(), SoundEvents.BLOCK_NOTE_HAT, SoundCategory.PLAYERS, 0.5f, pitch);
+				player.world.playSound(player, player.getPosition(), ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation("minecraft",ConfigurationHandler.favoriteSound)), SoundCategory.PLAYERS, 0.5f, pitch);
 			}
 			return;
 		}

@@ -7,6 +7,7 @@ item.battery.desc=Permet de recharger le scanner
 config.batteryEnergy=Energie max d'une batterie
 config.scanRange=Portée du scanner en blocs
 config.highlightBlock=Illumine les blocs trouvés
+config.favoriteSound=Son préféré
 config.activateScannerSound=Active le son du scanner
 message.scanner.discharged=Le scanner est déchargé
 message.scanner.cantSelect=Ce bloc ne peut être sélectionné

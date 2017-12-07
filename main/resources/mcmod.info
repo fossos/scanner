@@ -2,13 +2,13 @@
 {
   "modid": "scanner",
   "name": "Corail Scanner",
-  "description": "Add a scanner able to find any kind of blocks, with a playfulness to find them.",
+  "description": "\u00A7eThe scanner allows you to find any kind of blocks, with a playfulness to find them.",
   "version": "${version}",
   "mcversion": "${mcversion}",
   "url": "http://minecraft.curseforge.com/projects/corail-scanner",
   "updateUrl": "http://minecraft.curseforge.com/projects/corail-scanner/files",
-  "authorList": ["Corail"],
-  "credits": "The Forge and FML guys, for making this example",
+  "authorList": ["\u00A79Corail","\u00A79Robijn Vogel"],
+  "credits": "\u00A7oSpecial thanks to the Forge and FML guys.",
   "logoFile": "",
   "screenshots": [],
   "dependencies": []
