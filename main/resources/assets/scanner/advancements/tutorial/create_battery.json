@@ -9,16 +9,12 @@
         "description": {
             "translate": "advancement.create_battery.desc"
         },
-		"frame": "task",
-		"hidden": false
+		"frame": "task"
     },
 	"parent": "scanner:tutorial/root",
     "criteria": {
       "coded_trigger": {
         "trigger": "minecraft:impossible"
       }
-    },
-	"requirements": [
-      [  "coded_trigger" ]
-    ]
+    }
 }

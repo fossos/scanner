@@ -4,8 +4,6 @@ import java.awt.Color;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.google.common.collect.Lists;
-
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
@@ -14,21 +12,15 @@ import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.math.Vec3i;
 import ovh.corail.scanner.core.Helper;
+import ovh.corail.scanner.core.Main;
 import ovh.corail.scanner.core.ModProps;
 import ovh.corail.scanner.handler.ConfigurationHandler;
-import ovh.corail.scanner.handler.PacketHandler;
-import ovh.corail.scanner.item.ItemScanner;
-import ovh.corail.scanner.packet.DamageHoldItemServerMessage;
 
 public class GuiOverlayScanner extends Gui {
-	protected static Minecraft mc;
+	public static Minecraft mc;
 	protected static FontRenderer fontRenderer;
 	protected static ScaledResolution scaled;
 	protected static int width, height, guiLeft, guiTop;
@@ -40,11 +32,14 @@ public class GuiOverlayScanner extends Gui {
 	private static long tick = Long.MIN_VALUE;
 	private static long lastTick = Long.MIN_VALUE;
 	private static final long tickTime = 100;
-	protected static int detectFound = 0;
+	public static int detectFound = 0;
 	protected static int lastProgress = 0;
-	protected static ItemStack target = ItemStack.EMPTY;
-	protected static boolean discharged;
-	protected static boolean messageDischarged = false;
+	protected final ItemStack scanner;
+	protected final boolean isDischarged;
+	protected final boolean isSearching;
+	protected final ItemStack target;
+	public static Set<BlockPos> blockPosList = new HashSet<BlockPos>();
+	public static Set<BlockPos> foundList = new HashSet<BlockPos>();
 
 	public GuiOverlayScanner(Minecraft mc) {
 		this.mc = mc;
@@ -54,14 +49,11 @@ public class GuiOverlayScanner extends Gui {
         this.height = scaled.getScaledHeight();
         this.guiLeft = width - guiWidth + 10;
         this.guiTop = height - guiHeight + 60;
-        ItemStack holdItem = mc.player.getHeldItemMainhand();
-        this.target = ItemScanner.getTarget(holdItem);
-        this.discharged = holdItem.getItemDamage() + ConfigurationHandler.damageAmount >= holdItem.getMaxDamage();
-        if (discharged) {
-        	lastProgress = 0;
-        } else {
-        	messageDischarged = false;
-        }
+        scanner = mc.player.getHeldItemMainhand();
+        isDischarged = Main.scanner.isDischarged(scanner);
+        isSearching = Main.scanner.isSearching(mc.player, scanner);
+        target = Main.scanner.getTarget(scanner);
+        if (Main.scanner.getEnergy(scanner) <= 0) { lastProgress = 0; }
         temporize();
         drawScreen();
 	}
@@ -84,66 +76,28 @@ public class GuiOverlayScanner extends Gui {
 	
 	protected void updateData() {
 		/** update the jauge depending on detectFound and lastProgress */
-		if (tick%5==0) {
+		if (tick%10==0) {
 			EntityPlayer player = mc.player;
-			BlockPos playerPos = player.getPosition().up();
-			Vec3d posVec3d = player.getPositionVector().addVector(0d, 1d, 0d);
-			Vec3d lookVec3d = player.getLookVec();
-			Vec3i lookVec3i = new Vec3i((int) Math.round(lookVec3d.x), (int) Math.round(lookVec3d.y), (int) Math.round(lookVec3d.z));
-			EnumFacing facing = EnumFacing.getFacingFromVector((float)lookVec3d.x, (float)lookVec3d.y, (float)lookVec3d.z);
-			BlockPos nearestPos = playerPos.add(lookVec3i.getX(), lookVec3i.getY(), lookVec3i.getZ());
-
-			int radius = ConfigurationHandler.scanRadius;
-			int depthMax = ConfigurationHandler.scanRange;
-			BlockPos currentPos = playerPos;
-			Set<BlockPos> blockPosList = new HashSet<BlockPos>();
-			/** list a line of blocks facing the player */
 			detectFound = 0;
-			if (!target.isEmpty() && !discharged) {
-				for (int depth = 1 ; depth <= depthMax ; depth++) {
-					currentPos = currentPos.add(lookVec3i.getX(), lookVec3i.getY(), lookVec3i.getZ());
-					BlockPos start, end;
-					if (radius == 0) {
-						blockPosList.add(currentPos);
-						continue;
-					}
-					/** add radius of blocks around that block */
-					if (facing == EnumFacing.DOWN || facing == EnumFacing.UP) {
-						start = currentPos.south(radius).west(radius);
-						end = currentPos.north(radius).east(radius);
-					} else {
-						start = currentPos.down(radius).west(radius);
-						end = currentPos.up(radius).east(radius);
-					}
-					blockPosList.addAll(Lists.newArrayList(BlockPos.getAllInBox(start, end)));
-				}
+			blockPosList.clear();
+			if (isSearching && !isDischarged) {
+				blockPosList = Helper.findBlockPossesInSphericalCone(player, 20, ConfigurationHandler.scanRange);
+				foundList.clear();
 				for (BlockPos pos : blockPosList) {
+					if (!mc.world.isBlockLoaded(pos)) { continue; }
 					IBlockState state = mc.world.getBlockState(pos);
-					// TODO could check oredict similar ore
-					if (Helper.areItemEqual(new ItemStack(state.getBlock(), 1, state.getBlock().getMetaFromState(state)), target)) {
+					ItemStack currentStack = new ItemStack(state.getBlock(), 1, state.getBlock().getMetaFromState(state));
+					if (Helper.isSimilarOredict(currentStack, target)) {
+						foundList.add(pos);
 						detectFound++;
 					}
 				}
 			}
-			// TODO Achievment for some kinds/count of blocks found */
 		}
 		/** allow to draw slowly the jauge progress */
 		if (tick%2==0 && lastProgress != detectFound) {
 			lastProgress = (lastProgress < detectFound ? lastProgress+1 : lastProgress-1);
 		}
-		/** damage the scanner */
-		if (!discharged && !target.isEmpty() && ConfigurationHandler.damageAmount > 0 && tick%ConfigurationHandler.tickForDamage==0) {
-			ItemStack scanner = mc.player.getHeldItemMainhand();
-			PacketHandler.INSTANCE.sendToServer(new DamageHoldItemServerMessage(ConfigurationHandler.damageAmount));
-			scanner = Helper.damageItem(scanner, ConfigurationHandler.damageAmount);
-			mc.player.setHeldItem(EnumHand.MAIN_HAND, scanner);
-
-		}
-		if (discharged && !messageDischarged) {
-			Helper.sendMessage("message.scanner.discharged", mc.player, true);
-			messageDischarged = true;
-		}
-		// TODO sounds to this player depending on detectFound
 	}
 	
 	protected void drawScreen() {
@@ -163,16 +117,18 @@ public class GuiOverlayScanner extends Gui {
 		}
 		GlStateManager.scale(2.5f, 2.5f, 2.5f);
 		/** draw text on gui */
-		if (discharged) {
+		if (isDischarged) {
 			drawString(fontRenderer, Helper.getTranslation("statut.scanner.discharged"), x*2, (y+15)*2, Color.RED.getRGB());
-		} else if (!target.isEmpty()) {
+		} else if (isSearching) {
 			drawString(fontRenderer, Helper.getTranslation("statut.scanner.scanning"), x*2, (y+15)*2, Color.YELLOW.getRGB());
+		} else {
+			drawString(fontRenderer, Helper.getTranslation("statut.scanner.waiting"), x*2, (y+15)*2, Color.CYAN.getRGB());
+		}
+		if (!target.isEmpty()) {
 			drawString(fontRenderer, target.getDisplayName(), x*2, (y+22)*2, Color.YELLOW.getRGB());
 		} else {
-			drawString(fontRenderer, Helper.getTranslation("statut.scanner.waiting1"), x*2, (y+15)*2, Color.CYAN.getRGB());
-			drawString(fontRenderer, Helper.getTranslation("statut.scanner.waiting2"), x*2, (y+22)*2, Color.CYAN.getRGB());
+			drawString(fontRenderer, Helper.getTranslation("statut.scanner.noTarget"), x*2, (y+22)*2, Color.CYAN.getRGB());
 		}
 		GlStateManager.scale(2f, 2f, 2f);
 	}
-
 }

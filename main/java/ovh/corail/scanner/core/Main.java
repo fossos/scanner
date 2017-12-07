@@ -7,6 +7,10 @@ import static ovh.corail.scanner.core.ModProps.MOD_UPDATE;
 import static ovh.corail.scanner.core.ModProps.MOD_VER;
 import static ovh.corail.scanner.core.ModProps.ROOT;
 
+import java.io.File;
+
+import org.apache.logging.log4j.Logger;
+
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
@@ -16,7 +20,9 @@ import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import ovh.corail.scanner.handler.ConfigurationHandler;
 import ovh.corail.scanner.handler.EventHandler;
+import ovh.corail.scanner.handler.PacketHandler;
 import ovh.corail.scanner.item.ItemBattery;
 import ovh.corail.scanner.item.ItemScanner;
 
@@ -28,10 +34,11 @@ public class Main {
 	
 	@SidedProxy(clientSide = ROOT +".core.ClientProxy", serverSide = ROOT + ".core.CommonProxy")
 	public static CommonProxy proxy;
+	public static Logger logger;
 	public static CreativeTabs tabScanner = new CreativeTabs(MOD_ID) {
 		@Override
 		public ItemStack getTabIconItem() {
-			return new ItemStack(Main.scanner, 1);
+			return new ItemStack(Main.scanner);
 		}
 
 		@Override
@@ -44,6 +51,10 @@ public class Main {
 
 	@Mod.EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
+		logger = event.getModLog();
+		PacketHandler.init();
+		/** config */
+		ConfigurationHandler.loadConfig(new File(event.getModConfigurationDirectory(), ModProps.MOD_ID));
 		MinecraftForge.EVENT_BUS.register(new EventHandler());
 		proxy.preInit(event);
 	}

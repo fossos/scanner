@@ -3,7 +3,7 @@ package ovh.corail.scanner.handler;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.relauncher.Side;
 import ovh.corail.scanner.core.ModProps;
-import ovh.corail.scanner.packet.DamageHoldItemServerMessage;
+import ovh.corail.scanner.packet.UpdateSharedDataMessage;
 
 public class PacketHandler {
 
@@ -11,6 +11,6 @@ public class PacketHandler {
 
 	public static void init() {
 		int id = 0;
-		INSTANCE.registerMessage(DamageHoldItemServerMessage.Handler.class, DamageHoldItemServerMessage.class, id++, Side.SERVER);
+		INSTANCE.registerMessage(UpdateSharedDataMessage.Handler.class, UpdateSharedDataMessage.class, id++, Side.CLIENT);
 	}
 }

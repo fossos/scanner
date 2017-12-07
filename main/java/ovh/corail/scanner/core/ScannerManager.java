@@ -12,18 +12,14 @@ import ovh.corail.scanner.handler.ConfigurationHandler;
 public class ScannerManager {
 	private static final ScannerManager instance = new ScannerManager();
 	private File blacklistFile = new File(ConfigurationHandler.getConfigDir(), "blacklist_blocks.json");
-	public Set<String> blacklist = new HashSet<String>();
+	private Set<String> blacklist = new HashSet<String>();
 	
 	private ScannerManager() {
-		
+		loadBlacklist();
 	}
 	
 	public static ScannerManager getInstance() {
 		return instance;
-	}
-	
-	public void init() {
-		loadBlacklist();
 	}
 
 	private void loadBlacklist() {

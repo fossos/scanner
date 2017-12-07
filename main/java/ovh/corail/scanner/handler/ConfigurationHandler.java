@@ -9,17 +9,18 @@ import ovh.corail.scanner.core.ModProps;
 public class ConfigurationHandler {
 	public static Configuration config;
 	private static File configDir;
-	public static int damageAmount, tickForDamage, scanRange, scanRadius;
+	public static int batteryEnergy, scanRange;
+	public static boolean highlightBlocks, enableScannerSound;
 	
 	private ConfigurationHandler() {
 		
 	}
 	
 	public static void refreshConfig() {
-		damageAmount=config.getInt("damageAmount", config.CATEGORY_GENERAL, 5, 0, 5000, Helper.getTranslation("config.damageAmount"));
-		tickForDamage=config.getInt("tickForDamage", config.CATEGORY_GENERAL, 1000, 100, 60000, Helper.getTranslation("config.tickForDamage"));
-		scanRange=config.getInt("scanRange", config.CATEGORY_GENERAL, 10, 1, 1000, Helper.getTranslation("config.scanRange"));
-		scanRadius=config.getInt("scanRadius", config.CATEGORY_GENERAL, 3, 1, 9, Helper.getTranslation("config.scanRadius"));
+		batteryEnergy=config.getInt("batteryEnergy", config.CATEGORY_GENERAL, 5000, 1000, 50000, Helper.getTranslation("config.batteryEnergy"));
+		scanRange=config.getInt("scanRange", config.CATEGORY_GENERAL, 10, 1, 30, Helper.getTranslation("config.scanRange"));
+		highlightBlocks = config.getBoolean("highlightBlocks", config.CATEGORY_CLIENT, false, Helper.getTranslation("config.highlightBlocks"));
+		enableScannerSound = config.getBoolean("enableScannerSound", config.CATEGORY_CLIENT, true, Helper.getTranslation("config.enableScannerSound"));
 		if (config.hasChanged()) {
 			config.save();
 		}
@@ -37,6 +38,11 @@ public class ConfigurationHandler {
 
 	public static File getConfigDir() {
 		return configDir;
+	}
+	
+	public static void updateClient(int scanRange, int batteryEnergy) {
+		ConfigurationHandler.scanRange = scanRange;
+		ConfigurationHandler.batteryEnergy= batteryEnergy;
 	}
 	
 }

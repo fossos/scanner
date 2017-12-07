@@ -9,6 +9,6 @@ import ovh.corail.scanner.handler.ConfigurationHandler;
 
 public class GuiConfigScanner extends GuiConfig {
 	public GuiConfigScanner(GuiScreen parentScreen) {
-		super(parentScreen, new ConfigElement(ConfigurationHandler.config.getCategory(Configuration.CATEGORY_GENERAL)).getChildElements(), ModProps.MOD_ID, false, false, GuiConfig.getAbridgedConfigPath(ConfigurationHandler.config.toString()));
+		super(parentScreen, new ConfigElement(ConfigurationHandler.config.getCategory(Configuration.CATEGORY_CLIENT)).getChildElements(), ModProps.MOD_ID, false, false, GuiConfig.getAbridgedConfigPath(ConfigurationHandler.config.toString()));
 	}
 }
