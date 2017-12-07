@@ -62,8 +62,7 @@ public class ClientEventHandler {
 		double doubleX = player.lastTickPosX + (player.posX - player.lastTickPosX) * event.getPartialTicks();
 		double doubleY = player.lastTickPosY + (player.posY - player.lastTickPosY) * event.getPartialTicks();
 		double doubleZ = player.lastTickPosZ + (player.posZ - player.lastTickPosZ) * event.getPartialTicks();
-		Set<BlockPos> list = currentGui.foundList;
-		for (BlockPos p : list) {
+
 		GlStateManager.pushMatrix();
 		GlStateManager.disableTexture2D();
 		GlStateManager.disableLighting();
@@ -72,7 +71,6 @@ public class ClientEventHandler {
 		long c = (System.currentTimeMillis() / 15l) % 360l;
 		Color color = Color.getHSBColor(c / 360f, 1f, 1f);		
 		
-		float x = p.getX(), y = p.getY(), z = p.getZ();
 		// RenderHelper.enableStandardItemLighting();
 		Tessellator tessellator = Tessellator.getInstance();
 		BufferBuilder renderer = tessellator.getBuffer();
@@ -82,42 +80,46 @@ public class ClientEventHandler {
 		GlStateManager.pushAttrib();
 		GL11.glDisable(GL11.GL_DEPTH_TEST);
 
-		float offset = 1f;
-		renderer.pos(x, y, z).endVertex();
-		renderer.pos(x + offset, y, z).endVertex();
-
-		renderer.pos(x, y, z).endVertex();
-		renderer.pos(x, y + offset, z).endVertex();
-
-		renderer.pos(x, y, z).endVertex();
-		renderer.pos(x, y, z + offset).endVertex();
-
-		renderer.pos(x + offset, y + offset, z + offset).endVertex();
-		renderer.pos(x, y + offset, z + offset).endVertex();
-
-		renderer.pos(x + offset, y + offset, z + offset).endVertex();
-		renderer.pos(x + offset, y, z + offset).endVertex();
-
-		renderer.pos(x + offset, y + offset, z + offset).endVertex();
-		renderer.pos(x + offset, y + offset, z).endVertex();
-
-		renderer.pos(x, y + offset, z).endVertex();
-		renderer.pos(x, y + offset, z + offset).endVertex();
-
-		renderer.pos(x, y + offset, z).endVertex();
-		renderer.pos(x + offset, y + offset, z).endVertex();
-
-		renderer.pos(x + offset, y, z).endVertex();
-		renderer.pos(x + offset, y, z + offset).endVertex();
-
-		renderer.pos(x + offset, y, z).endVertex();
-		renderer.pos(x + offset, y + offset, z).endVertex();
-
-		renderer.pos(x, y, z + offset).endVertex();
-		renderer.pos(x + offset, y, z + offset).endVertex();
-
-		renderer.pos(x, y, z + offset).endVertex();
-		renderer.pos(x, y + offset, z + offset).endVertex();
+		Set<BlockPos> list = currentGui.foundList;
+		for (BlockPos p : list) {
+			float x = p.getX(), y = p.getY(), z = p.getZ();
+			float offset = 1f;
+			renderer.pos(x, y, z).endVertex();
+			renderer.pos(x + offset, y, z).endVertex();
+	
+			renderer.pos(x, y, z).endVertex();
+			renderer.pos(x, y + offset, z).endVertex();
+	
+			renderer.pos(x, y, z).endVertex();
+			renderer.pos(x, y, z + offset).endVertex();
+	
+			renderer.pos(x + offset, y + offset, z + offset).endVertex();
+			renderer.pos(x, y + offset, z + offset).endVertex();
+	
+			renderer.pos(x + offset, y + offset, z + offset).endVertex();
+			renderer.pos(x + offset, y, z + offset).endVertex();
+	
+			renderer.pos(x + offset, y + offset, z + offset).endVertex();
+			renderer.pos(x + offset, y + offset, z).endVertex();
+	
+			renderer.pos(x, y + offset, z).endVertex();
+			renderer.pos(x, y + offset, z + offset).endVertex();
+	
+			renderer.pos(x, y + offset, z).endVertex();
+			renderer.pos(x + offset, y + offset, z).endVertex();
+	
+			renderer.pos(x + offset, y, z).endVertex();
+			renderer.pos(x + offset, y, z + offset).endVertex();
+	
+			renderer.pos(x + offset, y, z).endVertex();
+			renderer.pos(x + offset, y + offset, z).endVertex();
+	
+			renderer.pos(x, y, z + offset).endVertex();
+			renderer.pos(x + offset, y, z + offset).endVertex();
+	
+			renderer.pos(x, y, z + offset).endVertex();
+			renderer.pos(x, y + offset, z + offset).endVertex();
+		}
 		tessellator.draw();
 		// RenderHelper.disableStandardItemLighting();
 		GlStateManager.popAttrib();
@@ -125,7 +127,5 @@ public class ClientEventHandler {
 		GlStateManager.enableLighting();
 		GlStateManager.color(1f, 1f, 1f, 1f);
 		GlStateManager.popMatrix();
-		
-		}
 	}
 }
