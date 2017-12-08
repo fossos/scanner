@@ -85,6 +85,7 @@ public class GuiOverlayScanner extends Gui {
 				foundList.clear();
 				for (BlockPos pos : blockPosList) {
 					if (!mc.world.isBlockLoaded(pos)) { continue; }
+					if (mc.world.isAirBlock(pos)) { continue; }
 					IBlockState state = mc.world.getBlockState(pos);
 					ItemStack currentStack = new ItemStack(state.getBlock(), 1, state.getBlock().getMetaFromState(state));
 					if (Helper.isSimilarOredict(currentStack, target)) {

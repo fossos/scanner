@@ -167,7 +167,7 @@ public class ItemScanner extends Item {
 	}
 	
 	public boolean isSearching(EntityPlayer player, ItemStack stack) {
-		return player.isHandActive() && getEnergy(stack) > 0 && hasTarget(stack);
+		return player.isHandActive() && player.getActiveItemStack() == stack && getEnergy(stack) > 0 && hasTarget(stack);
 	}
 	
 	public boolean hasTarget(ItemStack stack) {
