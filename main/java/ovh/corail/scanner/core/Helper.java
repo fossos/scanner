@@ -19,10 +19,10 @@ import com.google.gson.GsonBuilder;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementManager;
 import net.minecraft.advancements.AdvancementProgress;
+import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.management.PlayerList;
 import net.minecraft.util.ResourceLocation;
@@ -41,6 +41,9 @@ public class Helper {
 	public static boolean isSimilarOredict(ItemStack stack1, ItemStack stack2) {
 		if (stack1.isEmpty() || stack2.isEmpty()) { return false; }
         int[] oreList1 = OreDictionary.getOreIDs(stack1);
+        if (oreList1.length == 0) {
+        	return stack1.getItem() == stack2.getItem() && stack1.getMetadata() == stack2.getMetadata();
+        }
         int[] oreList2 = OreDictionary.getOreIDs(stack2);
         for (int oreId1 : oreList1) {
             for (int oreId2 : oreList2) {
@@ -198,9 +201,9 @@ public class Helper {
 	public static ItemStack StringToItemStack(String stringStack) {
 		String[] parts = stringStack.split(":");
 		if (parts.length == 4) {
-			Item item = Item.REGISTRY.getObject(new ResourceLocation(parts[0], parts[1]));
-			if (item != null) {
-				return new ItemStack(item, Integer.valueOf(parts[2]), Integer.valueOf(parts[3]));
+			Block block = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(parts[0], parts[1]));
+			if (block != null) {
+				return new ItemStack(block, Integer.valueOf(parts[2]), Integer.valueOf(parts[3]));
 			}
 		}
 		return ItemStack.EMPTY;
@@ -211,9 +214,9 @@ public class Helper {
 		if (withStackSize) { return StringToItemStack(stringStack); }
 		String[] parts = stringStack.split(":");
 		if (parts.length == 3) {
-			Item item = Item.REGISTRY.getObject(new ResourceLocation(parts[0], parts[1]));
-			if (item != null) {
-				return new ItemStack(item, 1, Integer.valueOf(parts[2]));
+			Block block = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(parts[0], parts[1]));
+			if (block != null) {
+				return new ItemStack(block, 1, Integer.valueOf(parts[2]));
 			}
 		}
 		return ItemStack.EMPTY;

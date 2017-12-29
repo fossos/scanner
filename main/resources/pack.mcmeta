@@ -1,0 +1,7 @@
+{
+    "pack": {
+        "description": "scanner resources",
+        "pack_format": 3,
+        "_comment": "lower case for lang file names"
+    }
+}
