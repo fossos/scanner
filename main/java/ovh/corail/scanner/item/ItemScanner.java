@@ -49,7 +49,9 @@ public class ItemScanner extends Item {
 	
 	@Override
 	public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> items) {
-		items.add(rechargeScanner(new ItemStack(this)));
+		if (tab == Main.tabScanner) {
+			items.add(rechargeScanner(new ItemStack(this)));
+		}
 	}
 	
 	@Override 

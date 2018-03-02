@@ -27,7 +27,7 @@ public class ConfigurationHandler {
 	public static void refreshConfig() {
 		batteryEnergy=config.getInt("batteryEnergy", config.CATEGORY_GENERAL, 10000, 1000, 100000, Helper.getTranslation("config.batteryEnergy"));
 		scanRange=config.getInt("scanRange", config.CATEGORY_GENERAL, 15, 1, 50, Helper.getTranslation("config.scanRange"));
-		highlightBlocks = config.getBoolean("highlightBlocks", config.CATEGORY_CLIENT, false, Helper.getTranslation("config.highlightBlocks"));
+		highlightBlocks = config.getBoolean("highlightBlocks", config.CATEGORY_CLIENT, true, Helper.getTranslation("config.highlightBlocks"));
 		enableScannerSound = config.getBoolean("enableScannerSound", config.CATEGORY_CLIENT, true, Helper.getTranslation("config.enableScannerSound"));
 		List<SoundEvent> soundList = ForgeRegistries.SOUND_EVENTS.getValues();
 		ArrayList<String> mcSoundList = Lists.newArrayList();
